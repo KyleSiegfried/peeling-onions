@@ -45,7 +45,7 @@ def check_for_bad_onion(phrase):
     """A function to check if an onion is bad"""
     to_check = []
 
-    onions = list(filter(r"([^\s]+\.(onion|pet))$", soup.find_all('a', href=True)))
+    onions = list(filter(r"([^\s]+\.)(onion|pet)$", soup.find_all('a', href=True)))
     for a in onions:
         to_check.append(re.sub(r"(\.([^\s]+))$", ".onion", a['href']))
             
