@@ -6,16 +6,26 @@ page = requests.get("https://darkfeed.io/ransomgroups/")
 soup = BeautifulSoup(page.content, "html.parser")
 checked = []
 
+def get_tor_session():
+    session = requests.session()
+    session.proxies = {
+        'http': 'socks5h://127.0.0.1:9050',
+        'https': 'socks5h://127.0.0.1:9050'
+    }
+    return session
+
+session = get_tor_session()
+
 def peel(onion, phrase):
     """A function to check for phrase"""
-    html_2 = requests.get(onion)
+    html_2 = session.get(onion)
     soup_3 = BeautifulSoup(html_2, 'html.parser')
     raw_text = soup_3.get_text()
     return phrase in raw_text
 
 def scrape(onion, main_onion, phrase):
     """A function to find more urls."""
-    html = requests.get(onion)
+    html = session.get(onion)
     soup_2 = BeautifulSoup(html, 'html.parser')
 
     hits = []
@@ -36,10 +46,10 @@ def check_for_bad_onion(phrase):
 
     for a in soup.find_all('a', href=True):
         if "darkfeed.io" not in a['href'] and "twitter.com" not in a['href'] and "t.me" not in a['href'] and "javascript:void(0);" not in a['href'] and "#" not in a['href']:
-            to_check.append(a['href'])
+            to_check.append(a['href'].replace(".pet", ""))
 
     for check in to_check:
-        print(check + ": " + len(scrape(check, check, phrase)))
+        print(check + ": " + str(len(scrape(check, check, phrase))))
         checked.append(to_check.pop())
 
 check_for_bad_onion(str(input("What company would you like to search for?")))
