@@ -45,9 +45,10 @@ def check_for_bad_onion(phrase):
     """A function to check if an onion is bad"""
     to_check = []
 
-    for a in soup.find_all('a', href=True):
-        if "darkfeed.io" not in a['href'] and "twitter.com" not in a['href'] and "t.me" not in a['href'] and "javascript:void(0);" not in a['href'] and "#" not in a['href']:
-            to_check.append(re.sub(r"/(\.([^\s]+))$/g", ".onion", a['href']))
+    onions = list(filter(r"([^\s]+\.(onion|pet))$", soup.find_all('a', href=True)))
+    for a in onions:
+        to_check.append(re.sub(r"(\.([^\s]+))$", ".onion", a['href']))
+            
 
     for check in to_check:
         # print(check + ": " + str(len(scrape(check, check, phrase))))
