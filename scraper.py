@@ -43,15 +43,14 @@ def scrape(onion, main_onion, phrase):
 
 def check_for_bad_onion(phrase):
     """A function to check if an onion is bad"""
-    to_check = []
+    onions = []
 
-    onion_regex = re.compile("([^\s]+\.)(onion|pet)$")
-    onions = list(filter(onion_regex.match, soup.find_all('a', href=True)))
-    for a in onions:
-        to_check.append(re.sub(r"(\.([^\s]+))$", ".onion", a['href']))
+    for a in soup.find_all('a', href=True):
+        if re.match(r"([^\s]+\.)(onion|pet)$", a['href']) is not None:
+            onions.append(re.sub(r"(\.([^\s]+))$", ".onion", a['href']))
             
 
-    for check in to_check:
+    for check in onions:
         # print(check + ": " + str(len(scrape(check, check, phrase))))
         print(check + ": " + str(peel(check, phrase)))
         checked.append(check)
