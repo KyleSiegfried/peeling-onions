@@ -42,6 +42,7 @@ def peel_sub(main_onion, main_number):
     try:
         horizontal_dark_page = session.get(main_onion)
         if horizontal_dark_page.status_code == int(200):
+            to_check.append(main_onion)
             hdp_content = BeautifulSoup(horizontal_dark_page.text, 'html.parser')
             second_number = int(1)
             for a2 in hdp_content.find_all('a', href=True):
@@ -61,10 +62,9 @@ def filter_onions():
     for a in content.find_all('a', href=True):
         if re.match(r"([^\s]+\.)(onion|pet)$", a['href']) is not None:
             #Replaces top-level domain with .onion
-            url = re.sub(r"(\.([^\s]+))$", ".onion", a['href'])
-            to_check.append(url)
+            main_onion = re.sub(r"(\.([^\s]+))$", ".onion", a['href'])
             print(str(main_number) + " Appending Main")
-            peel_sub(url, main_number)
+            peel_sub(main_onion, main_number)
             main_number = main_number+1                
 
 filter_onions()
