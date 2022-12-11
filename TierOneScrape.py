@@ -47,7 +47,7 @@ def peel_second(onion, main_onion, company):
     hdp_content = BeautifulSoup(horizontal_dark_page.text, 'html.parser')
 
     for a2 in hdp_content.find_all('a', href=True):
-        hdp_links = re.sub(r"(\.([^\s]+))$", ".onion", a2['href'])
+        hdp_links = a2['href']
         if main_onion in hdp_links and hdp_links not in checked_onions:
             #peel_second(hdp_links, main_onion, company)
             print(hdp_links)
