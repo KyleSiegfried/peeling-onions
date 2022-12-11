@@ -47,8 +47,10 @@ def peel_second(onion, main_onion, company):
     hdp_content = BeautifulSoup(horizontal_dark_page.text, 'html.parser')
 
     for a2 in hdp_content.find_all('a', href=True):
-        if main_onion in a2['href'] and a2['href'] not in checked_onions:
-            print(a2['href'])
+        hdp_links = re.sub(r"(\.([^\s]+))$", ".onion", a2['href'])
+        if main_onion in hdp_links and hdp_links not in checked_onions:
+            #peel_second(hdp_links, main_onion, company)
+            print(hdp_links)
 
 #Filters for <a> tags containing .onion top-level domain from light web HTML get-request
 def filter_onions(company):
