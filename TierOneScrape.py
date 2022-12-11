@@ -46,6 +46,7 @@ def peel_sub(main_onion):
 
             for a2 in hdp_content.find_all('a', href=True):
                 hdp_links = a2['href']
+                print(hdp_links)
                 if main_onion in hdp_links and hdp_links not in checked_onions and hdp_links not in to_check:
                     #peel_second(hdp_links, main_onion, company)
                     to_check.append(hdp_links)
@@ -59,6 +60,7 @@ def filter_onions():
             #Replaces top-level domain with .onion
             url = re.sub(r"(\.([^\s]+))$", ".onion", a['href'])
             to_check.append(url)
+            print(url)
             peel_sub(url)                
 
 filter_onions()
