@@ -1,7 +1,8 @@
+from bs4 import BeautifulSoup
+import os
+import random
 import re
 import requests
-import random
-from bs4 import BeautifulSoup
 
 #List of spoofed user agents to prevent site from blocking our traffic
 ua_list = ["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19577"
@@ -51,9 +52,11 @@ def peel_sub(main_onion):
 def filter_onions():
     for a in content.find_all('a', href=True):
         if re.match(r"([^\s]+\.)(onion|pet)$", a['href']) is not None:
-            #Replaces top-level domain with .onion
-            to_check.append(re.sub(r"(\.([^\s]+))$", ".onion", a['href']))
-            peel_sub(a['href'])
+            response = os.popen(f"ping {a['href']} ").read()
+            if("Request timed out." or "unreachable") not in response:
+                #Replaces top-level domain with .onion
+                to_check.append(re.sub(r"(\.([^\s]+))$", ".onion", a['href']))
+                peel_sub(a['href'])                
 
 filter_onions()
 
