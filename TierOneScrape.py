@@ -40,26 +40,23 @@ session = establish_tor_session()
 def peel_sub(main_onion):
     """A function to find more urls."""
     horizontal_dark_page = session.get(main_onion)
-    hdp_content = BeautifulSoup(horizontal_dark_page.text, 'html.parser')
+    if horizontal_dark_page.status_code == 200:
+        hdp_content = BeautifulSoup(horizontal_dark_page.text, 'html.parser')
 
-    for a2 in hdp_content.find_all('a', href=True):
-        hdp_links = a2['href']
-        if main_onion in hdp_links and hdp_links not in checked_onions and hdp_links not in to_check:
-            #peel_second(hdp_links, main_onion, company)
-            to_check.append(hdp_links)
+        for a2 in hdp_content.find_all('a', href=True):
+            hdp_links = a2['href']
+            if main_onion in hdp_links and hdp_links not in checked_onions and hdp_links not in to_check:
+                #peel_second(hdp_links, main_onion, company)
+                to_check.append(hdp_links)
 
 #Filters for <a> tags containing .onion top-level domain from light web HTML get-request
 def filter_onions():
     for a in content.find_all('a', href=True):
         if re.match(r"([^\s]+\.)(onion|pet)$", a['href']) is not None:
             #Replaces top-level domain with .onion
-            naked_url = []
-            naked_url.append(re.sub(r"(\.([^\s]+))$", ".onion", a['href']))
-            for url in naked_url:
-                response = os.popen(f"ping {url} ").read()
-                if("Request timed out." or "unreachable") not in response:
-                    to_check.append(url)
-                    peel_sub(url)                
+            url = re.sub(r"(\.([^\s]+))$", ".onion", a['href'])
+            to_check.append(url)
+            peel_sub(url)                
 
 filter_onions()
 
