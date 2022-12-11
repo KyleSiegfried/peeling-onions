@@ -50,7 +50,7 @@ def peel_sub(main_onion):
                     #peel_second(hdp_links, main_onion, company)
                     to_check.append(hdp_links)
                     
-                    print(x + "." + z + " Appending Secondary")
+                    print(str(x) + "." + str(z) + " Appending Secondary")
                     z = z+1
     except:
         print("omega lol")
@@ -62,7 +62,7 @@ def filter_onions():
             #Replaces top-level domain with .onion
             url = re.sub(r"(\.([^\s]+))$", ".onion", a['href'])
             to_check.append(url)
-            print(x + " Appending Main")
+            print(str(x) + " Appending Main")
             peel_sub(url)
             x = x+1                
 
