@@ -41,7 +41,8 @@ def peel_sub(main_onion):
     """A function to find more urls."""
     try:
         horizontal_dark_page = session.get(main_onion)
-        if horizontal_dark_page.status_code == '200':
+        print(horizontal_dark_page.status_code)
+        if horizontal_dark_page.status_code == int(200):
             hdp_content = BeautifulSoup(horizontal_dark_page.text, 'html.parser')
 
             for a2 in hdp_content.find_all('a', href=True):
