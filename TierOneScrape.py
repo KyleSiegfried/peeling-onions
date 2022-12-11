@@ -23,11 +23,11 @@ def establish_tor_session():
     }
     return session
 
-session = establish_tor_session
+session = establish_tor_session()
 
 def peel(new_url, company):
-    get_request = session.get(new_url)
-    parsed_dark_page = BeautifulSoup(get_request.text, 'html.parser')
+    dark_page = session.get(new_url)
+    parsed_dark_page = BeautifulSoup(dark_page.text, 'html.parser')
     raw_text = parsed_dark_page.get_text()
     return company in raw_text      
 
