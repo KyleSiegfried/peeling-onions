@@ -11,9 +11,6 @@ ua_list = ["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 ua = random.choice(ua_list)
 headers = {'User-Agent': ua}
 
-#Name of company we are querying for on onion sites
-company = str(input("What company would you like to query for? "))
-
 #Scrapes HTML from light web page and spoofs our user agent in the header of the get-request
 light_page = requests.get("https://darkfeed.io/ransomgroups/", headers=headers)
 #light_page = requests.get(str(input("What page would you like to scrape? ")), headers=headers)
@@ -51,4 +48,5 @@ def filter_onions(company):
     for new_url in onions:
         print(new_url + ": " + str(peel(new_url, company)))
 
-
+#Name of company we are querying for on onion sites
+filter_onions(str(input("What company would you like to query for? ")))
