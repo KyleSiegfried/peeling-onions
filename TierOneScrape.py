@@ -52,11 +52,14 @@ def peel_sub(main_onion):
 def filter_onions():
     for a in content.find_all('a', href=True):
         if re.match(r"([^\s]+\.)(onion|pet)$", a['href']) is not None:
-            response = os.popen(f"ping {a['href']} ").read()
-            if("Request timed out." or "unreachable") not in response:
-                #Replaces top-level domain with .onion
-                to_check.append(re.sub(r"(\.([^\s]+))$", ".onion", a['href']))
-                peel_sub(a['href'])                
+            #Replaces top-level domain with .onion
+            naked_url = []
+            naked_url.append(re.sub(r"(\.([^\s]+))$", ".onion", a['href']))
+            for url in naked_url:
+                response = os.popen(f"ping {url} ").read()
+                if("Request timed out." or "unreachable") not in response:
+                    to_check.append(url)
+                    peel_sub(url)                
 
 filter_onions()
 
