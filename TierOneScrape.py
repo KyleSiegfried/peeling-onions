@@ -61,6 +61,7 @@ def filter_onions(company):
             onions.append(re.sub(r"(\.([^\s]+))$", ".onion", a['href']))
     #Prints new .onion url and executes the peel function 
     for new_url in onions:
+        peel_second(new_url, new_url, company)
         #print(new_url + ": " + str(peel_first(new_url, company)))
         checked_onions.append(new_url)
 
