@@ -35,7 +35,6 @@ def establish_tor_session():
 
 #Sets our session to the Tor session
 session = establish_tor_session()
-x = 1
 
 def peel_sub(main_onion):
     """A function to find more urls."""
@@ -57,6 +56,7 @@ def peel_sub(main_onion):
 
 #Filters for <a> tags containing .onion top-level domain from light web HTML get-request
 def filter_onions():
+    x = 1
     for a in content.find_all('a', href=True):
         if re.match(r"([^\s]+\.)(onion|pet)$", a['href']) is not None:
             #Replaces top-level domain with .onion
