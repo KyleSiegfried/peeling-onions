@@ -10,6 +10,7 @@ ua_list = ["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
     ,"Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10_5_8; zh-cn) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27"]
 ua = random.choice(ua_list)
 headers = {'User-Agent': ua}
+main_number = int(1)
 
 #Scrapes HTML from light web page and spoofs our user agent in the header of the get-request
 light_page = requests.get("https://darkfeed.io/ransomgroups/", headers=headers)
@@ -35,7 +36,7 @@ def establish_tor_session():
 
 #Sets our session to the Tor session
 session = establish_tor_session()
-main_number = int(1)
+
 
 def peel_sub(main_onion):
     """A function to find more urls."""
