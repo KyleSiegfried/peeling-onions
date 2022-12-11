@@ -19,7 +19,7 @@ light_page = requests.get("https://darkfeed.io/ransomgroups/", headers=headers)
 content = BeautifulSoup(light_page.content, "html.parser")
 
 #Array of compiled links to check
-to_check = []
+to_scrape = []
 
 #.onion links we have already scraped
 checked_onions = []
@@ -36,20 +36,19 @@ def establish_tor_session():
 #Sets our session to the Tor session
 session = establish_tor_session()
 
-
 def peel_sub(main_onion, main_number):
     """A function to find more urls."""
     try:
         horizontal_dark_page = session.get(main_onion, headers=headers)
         if horizontal_dark_page.status_code == int(200):
-            to_check.append(main_onion)
+            to_scrape.append(main_onion)
             hdp_content = BeautifulSoup(horizontal_dark_page.text, 'html.parser')
             second_number = int(1)
             for a2 in hdp_content.find_all('a', href=True):
                 hdp_links = a2['href']
-                if main_onion in hdp_links and hdp_links not in checked_onions and hdp_links not in to_check:
+                if main_onion in hdp_links and hdp_links not in checked_onions and hdp_links not in to_scrape:
                     #peel_second(hdp_links, main_onion, company)
-                    to_check.append(hdp_links)
+                    to_scrape.append(hdp_links)
                     
                     print(str(main_number) + "." + str(second_number) + " Appending Secondary")
                     second_number = second_number+1
@@ -69,5 +68,13 @@ def filter_onions():
 
 filter_onions()
 
-for i in to_check:
-    print(i)
+#Scrapes to_scrape links for text containing the company name provided by user input
+def scraper(company):
+    for url in to_scrape:
+        dark_page = session.get(url, headers=headers)
+        dark_content = BeautifulSoup(dark_page.text, 'html.parser')
+        raw_text = dark_content.get_text()
+        checked_onions.append(url)
+        return company in raw_text
+scraper(str(input("What company do you want to scrape for? ")))
+    
