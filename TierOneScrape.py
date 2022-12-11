@@ -10,7 +10,9 @@ ua_list = ["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 ua = random.choice(ua_list)
 headers = {'User-Agent': ua}
 
-light_page = requests.get(str(input("What page would you like to scrape? ")), headers=headers)
+light_page = requests.get("https://darkfeed.io/ransomgroups/", headers=headers)
+
+#light_page = requests.get(str(input("What page would you like to scrape? ")), headers=headers)
 content = BeautifulSoup(light_page.content, "html.parser")
 
 def establish_tor_session():
