@@ -37,7 +37,7 @@ def establish_tor_session():
 session = establish_tor_session()
 
 
-def peel_sub(main_onion):
+def peel_sub(main_onion, main_number):
     """A function to find more urls."""
     try:
         horizontal_dark_page = session.get(main_onion)
@@ -64,7 +64,7 @@ def filter_onions():
             url = re.sub(r"(\.([^\s]+))$", ".onion", a['href'])
             to_check.append(url)
             print(str(main_number) + " Appending Main")
-            peel_sub(url)
+            peel_sub(url, main_number)
             main_number = main_number+1                
 
 filter_onions()
