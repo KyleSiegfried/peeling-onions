@@ -18,6 +18,9 @@ light_page = requests.get("https://darkfeed.io/ransomgroups/", headers=headers)
 #Parses HTML from the get-request above
 content = BeautifulSoup(light_page.content, "html.parser")
 
+#Array of compiled links to check
+to_check = []
+
 #.onion links we have already scraped
 checked_onions = []
 
@@ -33,37 +36,26 @@ def establish_tor_session():
 #Sets our session to the Tor session
 session = establish_tor_session()
 
-#Scrapes .onion link for text containing the company name provided by user input
-def peel_first(new_url, company):
-    dark_page = session.get(new_url, headers=headers)
-    dark_content = BeautifulSoup(dark_page.text, 'html.parser')
-    raw_text = dark_content.get_text()
-    checked_onions.append(new_url)
-    return company in raw_text
-
-def peel_second(onion, main_onion, company):
+def peel_sub(main_onion):
     """A function to find more urls."""
-    horizontal_dark_page = session.get(onion)
+    horizontal_dark_page = session.get(main_onion)
     hdp_content = BeautifulSoup(horizontal_dark_page.text, 'html.parser')
 
     for a2 in hdp_content.find_all('a', href=True):
         hdp_links = a2['href']
-        if main_onion in hdp_links and hdp_links not in checked_onions:
+        if main_onion in hdp_links and hdp_links not in checked_onions and hdp_links not in to_check:
             #peel_second(hdp_links, main_onion, company)
-            print(hdp_links)
+            to_check.append(hdp_links)
 
 #Filters for <a> tags containing .onion top-level domain from light web HTML get-request
-def filter_onions(company):
-    onions = []
+def filter_onions():
     for a in content.find_all('a', href=True):
         if re.match(r"([^\s]+\.)(onion|pet)$", a['href']) is not None:
             #Replaces top-level domain with .onion
-            onions.append(re.sub(r"(\.([^\s]+))$", ".onion", a['href']))
-    #Prints new .onion url and executes the peel function 
-    for new_url in onions:
-        peel_second(new_url, new_url, company)
-        #print(new_url + ": " + str(peel_first(new_url, company)))
-        checked_onions.append(new_url)
-
+            to_check.append(re.sub(r"(\.([^\s]+))$", ".onion", a['href']))
+            peel_sub(a['href'])
 #Name of company we are querying for on onion sites
 filter_onions(str(input("What company would you like to query for? ")))
+
+for i in to_check:
+    print(i)
