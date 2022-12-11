@@ -12,4 +12,4 @@
 - Linux
   - Install Tor
   - Tor&
-  - kill <pid> 
+  - kill \<pid> 
