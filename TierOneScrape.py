@@ -51,7 +51,7 @@ def peel_sub(main_onion):
                     #peel_second(hdp_links, main_onion, company)
                     to_check.append(hdp_links)
     except:
-        ""
+        print("omega lol")
 
 #Filters for <a> tags containing .onion top-level domain from light web HTML get-request
 def filter_onions():
