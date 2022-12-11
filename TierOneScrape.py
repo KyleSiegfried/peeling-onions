@@ -1,5 +1,4 @@
 from bs4 import BeautifulSoup
-import os
 import random
 import re
 import requests
@@ -36,6 +35,7 @@ def establish_tor_session():
 
 #Sets our session to the Tor session
 session = establish_tor_session()
+x = 1
 
 def peel_sub(main_onion):
     """A function to find more urls."""
@@ -43,12 +43,15 @@ def peel_sub(main_onion):
         horizontal_dark_page = session.get(main_onion)
         if horizontal_dark_page.status_code == int(200):
             hdp_content = BeautifulSoup(horizontal_dark_page.text, 'html.parser')
-
+            z = 1
             for a2 in hdp_content.find_all('a', href=True):
                 hdp_links = a2['href']
                 if main_onion in hdp_links and hdp_links not in checked_onions and hdp_links not in to_check:
                     #peel_second(hdp_links, main_onion, company)
                     to_check.append(hdp_links)
+                    
+                    print(x + "." + z + " Appending Secondary")
+                    z = z+1
     except:
         print("omega lol")
 
@@ -59,7 +62,9 @@ def filter_onions():
             #Replaces top-level domain with .onion
             url = re.sub(r"(\.([^\s]+))$", ".onion", a['href'])
             to_check.append(url)
-            peel_sub(url)                
+            print(x + " Appending Main")
+            peel_sub(url)
+            x = x+1                
 
 filter_onions()
 
