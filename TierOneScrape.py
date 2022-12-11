@@ -40,7 +40,7 @@ session = establish_tor_session()
 def peel_sub(main_onion, main_number):
     """A function to find more urls."""
     try:
-        horizontal_dark_page = session.get(main_onion)
+        horizontal_dark_page = session.get(main_onion, headers=headers)
         if horizontal_dark_page.status_code == int(200):
             to_check.append(main_onion)
             hdp_content = BeautifulSoup(horizontal_dark_page.text, 'html.parser')
