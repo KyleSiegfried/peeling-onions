@@ -18,6 +18,9 @@ light_page = requests.get("https://darkfeed.io/ransomgroups/", headers=headers)
 #Parses HTML from the get-request above
 content = BeautifulSoup(light_page.content, "html.parser")
 
+#.onion links we have already scraped
+checked_onions = []
+
 #Routes our traffic through the default Tor port running on our host OS
 def establish_tor_session():
     session = requests.session()
@@ -35,7 +38,24 @@ def peel(new_url, company):
     dark_page = session.get(new_url, headers=headers)
     dark_content = BeautifulSoup(dark_page.text, 'html.parser')
     raw_text = dark_content.get_text()
-    return company in raw_text      
+    checked_onions.append(new_url)
+    return company in raw_text
+
+def scrape(onion, main_onion, company):
+    """A function to find more urls."""
+    horizontal_dark_page = session.get(onion)
+    hdp_content = BeautifulSoup(horizontal_dark_page.text, 'html.parser')
+
+    hits = []
+
+    for a in hdp_content.find_all('a', href=True):
+        if main_onion in a['href'] and a['href'] not in checked_onions:
+            hits = hits + scrape(a['href'], main_onion, company)
+    
+    if peel(onion, company):
+        hits.append(onion)
+
+    return hits
 
 #Filters for <a> tags containing .onion top-level domain from light web HTML get-request
 def filter_onions(company):
@@ -47,6 +67,7 @@ def filter_onions(company):
     #Prints new .onion url and executes the peel function 
     for new_url in onions:
         print(new_url + ": " + str(peel(new_url, company)))
+        checked_onions.append(new_url)
 
 #Name of company we are querying for on onion sites
 filter_onions(str(input("What company would you like to query for? ")))
