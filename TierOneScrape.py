@@ -39,15 +39,18 @@ session = establish_tor_session()
 
 def peel_sub(main_onion):
     """A function to find more urls."""
-    horizontal_dark_page = session.get(main_onion)
-    if horizontal_dark_page.status_code == 200:
-        hdp_content = BeautifulSoup(horizontal_dark_page.text, 'html.parser')
+    try:
+        horizontal_dark_page = session.get(main_onion)
+        if horizontal_dark_page.status_code == '200':
+            hdp_content = BeautifulSoup(horizontal_dark_page.text, 'html.parser')
 
-        for a2 in hdp_content.find_all('a', href=True):
-            hdp_links = a2['href']
-            if main_onion in hdp_links and hdp_links not in checked_onions and hdp_links not in to_check:
-                #peel_second(hdp_links, main_onion, company)
-                to_check.append(hdp_links)
+            for a2 in hdp_content.find_all('a', href=True):
+                hdp_links = a2['href']
+                if main_onion in hdp_links and hdp_links not in checked_onions and hdp_links not in to_check:
+                    #peel_second(hdp_links, main_onion, company)
+                    to_check.append(hdp_links)
+    except:
+        ""
 
 #Filters for <a> tags containing .onion top-level domain from light web HTML get-request
 def filter_onions():
