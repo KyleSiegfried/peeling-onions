@@ -10,7 +10,7 @@ ua_list = ["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 ua = random.choice(ua_list)
 headers = {'User-Agent': ua}
 
-light_page = requests.get(str(input("What page would you like to scrape?")), headers=headers)
+light_page = requests.get(str(input("What page would you like to scrape? ")), headers=headers)
 content = BeautifulSoup(light_page.content, "html.parser")
 
 def establish_tor_session():
@@ -24,7 +24,7 @@ def establish_tor_session():
 session = establish_tor_session
 
 def peel(new_url, company):
-    get_request = session.get(new_url, headers=headers)
+    get_request = session.get(new_url)
     parsed_dark_page = BeautifulSoup(get_request.text, 'html.parser')
     raw_text = parsed_dark_page.get_text()
     return company in raw_text      
