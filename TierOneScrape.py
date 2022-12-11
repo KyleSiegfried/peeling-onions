@@ -34,28 +34,21 @@ def establish_tor_session():
 session = establish_tor_session()
 
 #Scrapes .onion link for text containing the company name provided by user input
-def peel(new_url, company):
+def peel_first(new_url, company):
     dark_page = session.get(new_url, headers=headers)
     dark_content = BeautifulSoup(dark_page.text, 'html.parser')
     raw_text = dark_content.get_text()
     checked_onions.append(new_url)
     return company in raw_text
 
-def scrape(onion, main_onion, company):
+def peel_second(onion, main_onion, company):
     """A function to find more urls."""
     horizontal_dark_page = session.get(onion)
     hdp_content = BeautifulSoup(horizontal_dark_page.text, 'html.parser')
 
-    hits = []
-
-    for a in hdp_content.find_all('a', href=True):
-        if main_onion in a['href'] and a['href'] not in checked_onions:
-            hits = hits + scrape(a['href'], main_onion, company)
-    
-    if peel(onion, company):
-        hits.append(onion)
-
-    return hits
+    for a2 in hdp_content.find_all('a', href=True):
+        if main_onion in a2['href'] and a2['href'] not in checked_onions:
+            print(a2['href'])
 
 #Filters for <a> tags containing .onion top-level domain from light web HTML get-request
 def filter_onions(company):
@@ -66,7 +59,7 @@ def filter_onions(company):
             onions.append(re.sub(r"(\.([^\s]+))$", ".onion", a['href']))
     #Prints new .onion url and executes the peel function 
     for new_url in onions:
-        print(new_url + ": " + str(peel(new_url, company)))
+        #print(new_url + ": " + str(peel_first(new_url, company)))
         checked_onions.append(new_url)
 
 #Name of company we are querying for on onion sites
