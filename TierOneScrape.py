@@ -54,8 +54,8 @@ def filter_onions():
             #Replaces top-level domain with .onion
             to_check.append(re.sub(r"(\.([^\s]+))$", ".onion", a['href']))
             peel_sub(a['href'])
-#Name of company we are querying for on onion sites
-filter_onions(str(input("What company would you like to query for? ")))
+
+filter_onions()
 
 for i in to_check:
     print(i)
