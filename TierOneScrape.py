@@ -56,7 +56,7 @@ def peel_sub(main_onion, main_number):
                     print(str(main_number) + "." + str(second_number) + " Appending Secondary")
                     second_number = second_number+1
     except:
-        print("omega lol")
+        print("Session Error")
 
 #Filters for <a> tags containing .onion top-level domain from light web HTML get-request
 def filter_onions():
@@ -78,6 +78,7 @@ def scraper(company):
         dark_content = BeautifulSoup(dark_page.text, 'html.parser')
         raw_text = dark_content.get_text()
         checked_onions.append(url)
-        return company in raw_text
-scraper(company)
+        if company in raw_text.lower():
+            print(url + ": " + "Compromised")
+scraper(company.lower())
     
