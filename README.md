@@ -2,6 +2,9 @@
 
 ## Required Packages
 - pip install bs4 requests
+- pip install random
+- pip install re
+- pip install requests
 
 ## Tor Setup
 - Background Info
