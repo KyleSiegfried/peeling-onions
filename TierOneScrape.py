@@ -11,6 +11,7 @@ ua_list = ["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
     ,"Mozilla/5.0 (X11) AppleWebKit/62.41 (KHTML, like Gecko) Edge/17.10859 Safari/452.6", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2656.18 Safari/537.36"
     ,"Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML like Gecko) Chrome/44.0.2403.155 Safari/537.36", "Mozilla/5.0 (Linux; U; en-US) AppleWebKit/525.13 (KHTML, like Gecko) Chrome/0.2.149.27 Safari/525.13","Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27"
     ,"Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10_5_8; zh-cn) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27"]
+#Uses random to select a user agent from the list above
 ua = random.choice(ua_list)
 headers = {'User-Agent': ua}
 
@@ -39,6 +40,7 @@ def establish_tor_session():
 #Sets our session to the Tor session
 session = establish_tor_session()
 
+#Scrapes the main .onion site for subpage links within the same domain and appends the links to to_scrape
 def peel_sub(main_onion, main_number):
     """A function to find more urls."""
     try:
@@ -50,7 +52,6 @@ def peel_sub(main_onion, main_number):
             for a2 in hdp_content.find_all('a', href=True):
                 hdp_links = a2['href']
                 if main_onion in hdp_links and hdp_links not in checked_onions and hdp_links not in to_scrape:
-                    #peel_second(hdp_links, main_onion, company)
                     to_scrape.append(hdp_links)
                     
                     print(str(main_number) + "." + str(second_number) + " Appending Secondary")
@@ -81,4 +82,3 @@ def scraper(company):
         if company in raw_text.lower():
             print(url + ": " + "Compromised")
 scraper(company.lower())
-    
